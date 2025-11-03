@@ -4,6 +4,7 @@ import Hero from '../components/Hero.jsx'
 import AiTools from '../components/AiTools.jsx'
 import Testimonial from '../components/testimonial.jsx'
 import Plan from '../components/Plan.jsx'
+import Footer from '../components/footer.jsx'
 
 const Home = () => {
   return (
@@ -13,6 +14,7 @@ const Home = () => {
     <AiTools/>
     <Testimonial/>
     <Plan/>
+    <Footer/>
     </>
   )
 }
