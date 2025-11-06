@@ -4,6 +4,8 @@ import { Sparkles } from 'lucide-react'
 import { useState,useEffect } from 'react'  
 import { Gem } from 'lucide-react'
 import { Protect } from '@clerk/clerk-react'
+import CreationItem from '../components/CreationItem'
+import { Link } from 'react-router-dom'
 
 const Dashboard = () => {
 
@@ -52,10 +54,17 @@ const Dashboard = () => {
 
           </div>
 
+       </div>
+        
+          <div className='space-y-3' >
 
+            <p className='mt-8 mb-4 '> Recent Creations </p>
 
-        </div>
-
+            {
+              creations.map((item)=> 
+              <CreationItem key={item.id} item={item} />)
+            }
+          </div>
     </div>
   )
 }

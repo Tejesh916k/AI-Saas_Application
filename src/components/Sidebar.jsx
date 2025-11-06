@@ -62,7 +62,6 @@ const Sidebar = ({sidebar,setSidebar}) => {
 
             <Protect plan="premium" fallback="Free" > Premium </Protect>
 
-            
 
           </p>
         </div>
