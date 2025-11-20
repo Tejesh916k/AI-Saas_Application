@@ -1,5 +1,5 @@
 import React from 'react'
-import { Sparkles } from 'lucide-react'
+import { Eraser, Sparkles } from 'lucide-react'
 import { useState } from 'react'
 import { Edit,Hash } from 'lucide-react'
 
@@ -30,14 +30,16 @@ const RemoveBackground = () => {
           border-gray-300 placeholder-gray-400 text-gray-600'  required/>
   
           
+        <p className='text-xs text-gray-500 font-light mt-1'>
+            Supports JPG, PNG, BMP formats. Max size 5MB.
+        </p>
   
-      <br />
-  
+      
       <button type='submit' className='w-full flex items-center justify-center gap-2
       bg-gradient-to-r from-rose-500 to-rose-600 text-white px-4 py-2 rounded-md mt-6 hover:from-rose-600 hover:to-rose-700
       '>
-        <Hash className='w-5'/>
-        Generate Title
+        <Eraser className='w-5'/>
+        Remove Background
       </button> 
   
         </form>
@@ -47,8 +49,8 @@ const RemoveBackground = () => {
         border-gray-200 min-h-96'>
   
           <div className='flex items-center gap-3'>
-            <Hash className='w-5 h-5 text-[#f43f5e]'/>
-            <h1 className='text-xl font-semibold'>Generated Titles</h1>
+            <Eraser className='w-5 h-5 text-[#f43f5e]'/>
+            <h1 className='text-xl font-semibold'>Processed Image</h1>
   
           </div>
   
@@ -56,9 +58,9 @@ const RemoveBackground = () => {
             <div className='text-sm flex flex-col items-center gap-5
             text-gray-400'>
   
-              <Hash className='w-9 h-9 '/>
+              <Eraser className='w-9 h-9 '/>
   
-              <p>Enter a topic and click "Generate Title" to get started</p>
+              <p>Upload an image and click "Remove Background" to get started. </p>
   
   
             </div>
