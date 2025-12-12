@@ -10,3 +10,7 @@
 {
   --color-primary: #274fb3;
 }
+
+.reset-tw, .reset-tw *{
+  all:revert !important;
+}
