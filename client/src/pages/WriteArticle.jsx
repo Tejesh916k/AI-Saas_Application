@@ -2,6 +2,7 @@ import React from 'react'
 import { Sparkles } from 'lucide-react'
 import { useState } from 'react'
 import { Edit } from 'lucide-react'
+import { useAuth } from '@clerk/clerk-react'
 
 
 
@@ -15,9 +16,61 @@ const WriteArticle = () => {
 
   const [selectedLength, setSelectedLength] = useState(articleLength[0]);
   const [input,setInput] = useState('');
-  const onSubmitHandler = async(e) => { 
-    e.preventDefault();
+  const [output, setOutput] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const { getToken } = useAuth();
+
+
+  const onSubmitHandler = async (e) => {
+  e.preventDefault();
+
+  if (!input.trim()) {
+    alert("Please enter a topic");
+    return;
   }
+
+  setLoading(true);
+
+  try {
+    const token = await getToken();
+
+    if (!token) {
+      alert("User not authenticated");
+      setLoading(false);
+      return;
+    }
+
+    const response = await fetch(
+      "http://localhost:3000/api/ai/generate-article",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // 🔴 THIS WAS MISSING
+        },
+        body: JSON.stringify({
+          prompt: input,
+          length: selectedLength.length,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.success) {
+      setOutput(data.content);
+    } else {
+      alert(data.message);
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Error generating article");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
 
   return (
@@ -58,11 +111,11 @@ const WriteArticle = () => {
 
     <br />
 
-    <button type='submit' className='w-full flex items-center justify-center gap-2
-    bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-2 rounded-md mt-6 hover:from-indigo-700 hover:to-purple-500
+    <button type='submit' disabled={loading} className='w-full flex items-center justify-center gap-2
+    bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-2 rounded-md mt-6 hover:from-indigo-700 hover:to-purple-500 disabled:opacity-50
     '>
       <Edit className='w-5'/>
-      Generate Article
+      {loading ? 'Generating...' : 'Generate Article'}
     </button> 
 
       </form>
@@ -83,8 +136,13 @@ const WriteArticle = () => {
 
             <Edit className='w-9 h-9 '/>
 
-            <p>Enter a topic and click "Generated article" to get started</p>
-
+            {output ? (
+              <div className='w-full text-gray-700 text-left whitespace-pre-wrap'>
+                {output}
+              </div>
+            ) : (
+              <p>Enter a topic and click "Generated article" to get started</p>
+            )}
 
           </div>
 

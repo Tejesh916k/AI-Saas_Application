@@ -1,28 +1,35 @@
-// middle ware to handle authentication can be added here in the future
-
 import { clerkClient } from "@clerk/express";
 
-export const auth=async(req,res,next)=>{
-    // Placeholder for authentication logic
-    try {
-        const {userId,has} = await req.auth();
-        const hasPremiumPlan=await has({plan:"premium"});
+export const auth = async (req, res, next) => {
+  try {
+    const { userId, has } = req.auth();
 
-        const user=await clerkClient.users.getUser(userId); 
-
-        if(!hasPremiumPlan && user.privateMetadata.free_usage){
-            req.free_usage=user.privateMetadata.free_usage
-
-        }else {
-            await clerkClient.users.updateUserMetadata(userId,{
-                privateMetadata:{free_usage:0}
-            });
-            req.free_usage=0;
-        }
-        req.plan=hasPremiumPlan?"premium":"free";
-        next();
-
-    } catch (error) {
-        res.json({success:false,message:error.message});   
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized"
+      });
     }
-}
+
+    // Check subscription
+    const hasPremiumPlan = await has({ plan: "premium" });
+
+    // Fetch user from Clerk
+    const user = await clerkClient.users.getUser(userId);
+
+    // Read free usage safely
+    const freeUsage = user.privateMetadata?.free_usage ?? 0;
+
+    // Attach to request
+    req.userId = userId;
+    req.plan = hasPremiumPlan ? "premium" : "free";
+    req.free_usage = freeUsage;
+
+    next();
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};

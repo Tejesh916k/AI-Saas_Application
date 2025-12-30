@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.53.3",
+    "@neondatabase/serverless": "^1.0.2",
     "@tailwindcss/vite": "^4.1.15",
     "lucide-react": "^0.545.0",
     "react": "^19.1.1",
